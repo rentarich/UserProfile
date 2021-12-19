@@ -23,7 +23,7 @@ spec:
             - name: KUMULUZEE_DATASOURCES0_PASSWORD
               value: jviqrny5vLJYogFEeyBhAr7daifOAiwB
           ports:
-            - containerPort: 5557
+            - containerPort: 5560
               name: server
               protocol: TCP
          
@@ -37,7 +37,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 5557
+    - port: 5560
       protocol: TCP
       targetPort: server
   selector:

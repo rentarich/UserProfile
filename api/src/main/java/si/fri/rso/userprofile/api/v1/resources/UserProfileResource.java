@@ -11,6 +11,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;*/
 
 
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import si.fri.rso.userprofile.models.Borrow;
 import si.fri.rso.userprofile.models.Person;
 import si.fri.rso.userprofile.services.beans.UserBean;
 
@@ -22,7 +29,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-        import java.util.logging.Logger;
+import java.util.List;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 @Path("users")
@@ -45,20 +53,49 @@ public class UserProfileResource {
 
 
     @GET
+    @Operation(summary = "Get single user with id.", description = "Returns requested user.", tags = "persons")
+    @ApiResponses({
+            @ApiResponse(description = "Person with declared id", responseCode = "200", content = @Content(schema = @Schema(implementation =
+                    Person.class))),
+            @ApiResponse(responseCode = "405", description = "Validation error."),
+            @ApiResponse(responseCode = "404", description = "Not Found.")
+    })
     @Path("{userId}")
     public Response getUser(@PathParam("userId") Integer userId){
         Person p =  userBean.getPerson(userId);
-        p.setBorrows(null);
-        return Response.status(Response.Status.OK).entity(p).build();
+        if(p != null) {
+            p.setBorrows(null);
+
+            return Response.status(Response.Status.OK).entity(p).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @GET
+    @Operation(summary = "Get borrows for person with id.", description = "Returns borrows of requested user.", tags = "persons")
+    @ApiResponses({
+            @ApiResponse(description = "List of borrows for user", responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation =
+                    Borrow.class)))),
+            @ApiResponse(responseCode = "405", description = "Validation error."),
+            @ApiResponse(responseCode = "404", description = "Not Found.")
+    })
     @Path("{userId}/borrows")
-    public Response getbororo(@PathParam("userId") Integer userId){
-        return Response.status(Response.Status.OK).entity(userBean.getBorrows(userId)).build();
+    public Response getbororows(@PathParam("userId") Integer userId){
+        List<Borrow> p = userBean.getBorrows(userId);
+        if(p != null) {
+            return Response.status(Response.Status.OK).entity(p).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @PUT
+    @Operation(description = "Update user.", summary = "Updating user",
+            tags = "persons",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Item updated."),
+                    @ApiResponse(responseCode = "404", description = "Not Found.")
+
+            })
     @Path("{userId}")
     public Response updateUser(@PathParam("userId") Integer userId, Person person) {
         person = userBean.updateUser(userId, person);
