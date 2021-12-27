@@ -7,6 +7,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="borrow")
+@NamedQueries(value =
+        {
+                @NamedQuery(name = "Borrows.getOnUserID", query = "SELECT p FROM Borrow p WHERE p.person.id = :id")
+
+        })
 public class Borrow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +36,7 @@ public class Borrow {
 
 
     @JsonbTransient
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_person")
     private Person person;
 

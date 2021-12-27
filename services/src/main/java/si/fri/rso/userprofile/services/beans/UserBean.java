@@ -53,9 +53,8 @@ public class UserBean {
     }
 
     public List<Borrow> getBorrows(Integer userId) {
-        TypedQuery<Person> query = em.createNamedQuery("Person.getOnID", Person.class);
-        Person p = query.setParameter("id", userId).getResultList().get(0);
-        List<Borrow> b = p.getBorrows();
+        TypedQuery<Borrow> query = em.createNamedQuery("Borrows.getOnUserID", Borrow.class);
+        List<Borrow> b = query.setParameter("id", userId).getResultList();
 
         return b;
     }
