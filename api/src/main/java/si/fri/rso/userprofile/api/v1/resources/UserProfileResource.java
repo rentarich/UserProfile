@@ -11,12 +11,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;*/
 
 
 import com.kumuluz.ee.configuration.utils.ConfigurationUtil;
+import com.kumuluz.ee.cors.annotations.CrossOrigin;
+import com.kumuluz.ee.logs.LogManager;
+import com.kumuluz.ee.logs.cdi.Log;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.eclipse.jetty.server.Authentication;
 import si.fri.rso.userprofile.models.Borrow;
 import si.fri.rso.userprofile.models.Person;
 import si.fri.rso.userprofile.services.beans.UserBean;
@@ -36,12 +40,15 @@ import java.util.logging.Logger;
 @Path("users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Log
+@CrossOrigin
 public class UserProfileResource {
 
     private Client httpClient;
     private String baseUrl;
 
-    private Logger logger=Logger.getLogger(UserProfileResource.class.getName());
+    private com.kumuluz.ee.logs.Logger logger = LogManager.getLogger(UserProfileResource.class.getName());
+    private Logger log=Logger.getLogger(UserProfileResource.class.getName());
 
     @Inject
     private UserBean userBean;
@@ -63,8 +70,9 @@ public class UserProfileResource {
     @Path("{userId}")
     public Response getUser(@PathParam("userId") Integer userId){
         Person p =  userBean.getPerson(userId);
+        logger.info("get user"+userId);
         if(p != null) {
-            p.setBorrows(null);
+//            p.setBorrows(null);
 
             return Response.status(Response.Status.OK).entity(p).build();
         }
@@ -81,6 +89,7 @@ public class UserProfileResource {
     })
     @Path("{userId}/borrows")
     public Response getbororows(@PathParam("userId") Integer userId){
+        logger.info("get borrowsfor user "+userId);
         List<Borrow> p = userBean.getBorrows(userId);
         if(p != null) {
             return Response.status(Response.Status.OK).entity(p).build();

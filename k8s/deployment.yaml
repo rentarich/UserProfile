@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: recommendation-deployment
+  name: userprofile-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: recommendation
+      app: userprofile
   template:
     metadata:
       labels:
-        app: recommendation
+        app: userprofile
     spec:
       containers:
-        - image: ninavelikajne/recommendation-system
-          name: recommendation
+        - image: jp4861/userprofile:2021-12-19-18-30-34
+          name: userprofile
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
               value: jdbc:postgresql://fanny.db.elephantsql.com:5432/sewztpca
@@ -33,7 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: recommendation
+  name: userprofile
 spec:
   type: LoadBalancer
   ports:
@@ -41,4 +41,4 @@ spec:
       protocol: TCP
       targetPort: server
   selector:
-    app: recommendation
+    app: userprofile

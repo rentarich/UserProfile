@@ -1,5 +1,6 @@
 package si.fri.rso.userprofile.services.beans;
 
+import com.kumuluz.ee.logs.LogManager;
 import org.eclipse.persistence.oxm.annotations.XmlNameTransformer;
 import si.fri.rso.userprofile.models.Borrow;
 import si.fri.rso.userprofile.models.Item;
@@ -21,11 +22,14 @@ import java.util.logging.Logger;
 public class UserBean {
     private Logger log = Logger.getLogger(UserBean.class.getName());
     private String idBean;
+    private com.kumuluz.ee.logs.Logger logger = LogManager.getLogger(UserBean.class.getName());
 
     @PostConstruct
     private void init() {
         idBean = UUID.randomUUID().toString();
         log.info("Init bean: " + UserBean.class.getSimpleName() + " idBean: " + idBean);
+        logger.info("Init bean: " + UserBean.class.getSimpleName() + " idBean: " + idBean);
+
     }
 
     @PersistenceContext(unitName = "item-jpa")
@@ -34,11 +38,13 @@ public class UserBean {
     @PreDestroy
     private void destroy(){
         log.info("Deinit bean: " + UserBean.class.getSimpleName() + " idBean: " + idBean);
+        logger.info("Deinit bean: " + UserBean.class.getSimpleName() + " idBean: " + idBean);
     }
 
 
 
     public Person getPerson(Integer userId) {
+        logger.info("Get info about person with id"+userId);
         TypedQuery<Person> query = em.createNamedQuery("Person.getOnID", Person.class);
         Person p = query.setParameter("id", userId).getResultList().get(0);
         log.info(p.getBorrows().stream().toString());
