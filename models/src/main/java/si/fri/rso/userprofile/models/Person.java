@@ -55,7 +55,7 @@ public class Person {
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "Person",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "Person",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Borrow> borrows;
 
 
