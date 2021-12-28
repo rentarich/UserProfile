@@ -73,6 +73,7 @@ public class UserProfileResource {
         logger.info("get user"+userId);
         if(p != null) {
 //            p.setBorrows(null);
+            p.setBorrows(userBean.getBorrows(userId));
 
             return Response.status(Response.Status.OK).entity(p).build();
         }

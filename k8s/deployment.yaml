@@ -13,7 +13,7 @@ spec:
         app: userprofile
     spec:
       containers:
-        - image: jp4861/userprofile:2021-12-27-16-21-17
+        - image: jp4861/userprofile:2021-12-27-23-23-03
           name: userprofile
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
