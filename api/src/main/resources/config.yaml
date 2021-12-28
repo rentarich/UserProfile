@@ -1,5 +1,5 @@
 kumuluzee:
-  name: favourites
+  name: userprofile
   version: 1.0.0
   env:
     name: dev
